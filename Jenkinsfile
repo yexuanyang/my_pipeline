@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        PANDA_ADDR = '10.161.28.28'
-        PANDA_IMAGES_DIR = 'rros_arch_jenkins'
-    }
-
     stages{
         stage('Pre-Build') {
             steps {
@@ -25,9 +20,9 @@ pipeline {
         }
         stage('Post') {
             steps {
-                sh 'scp -rq ./arch/ yyx@${env.PANDA_ADDR}:~/images/${env.PANDA_IMAGES_DIR}'
+                sh 'scp -rq ./arch/ yyx@10.161.28.28:~/images/rros_arch_jenkins'
             }
         }
-        
+
     }
 }
