@@ -21,6 +21,8 @@ pipeline {
         stage('Post') {
             steps {
                 sh 'scp -rq ./arch/ yyx@10.161.28.28:~/images/rros_arch_jenkins'
+                git 'https://github.com/yexuanyang/my_pipeline'
+                sh 'python3 ./my_pipeline/submit_job.py'
             }
         }
 
