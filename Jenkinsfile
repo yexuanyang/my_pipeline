@@ -4,12 +4,7 @@ pipeline {
     stages{
         stage('Pre-Build') {
             steps {
-                sh ''' #!/bin/bash
-		            rustup override set beta-2021-06-23-x86_64-unknown-linux-gnu
-                    rustup component add rust-src
-                    make LLVM=1 rros_defconfig
-                    touch compile.txt
-                '''
+                sh '/root/my_pipeline/scripts/pre_build.sh'
             }
         }
         stage('Build') {
@@ -22,7 +17,7 @@ pipeline {
             steps {
                 sh 'scp -rq ./arch/ yyx@10.161.28.28:~/images/rros_arch_jenkins'
                 sh '''
-                    cd ~/my_pipeline
+                    cd /root/my_pipeline
                     git pull
                     python3 submit_job.py
                 '''
