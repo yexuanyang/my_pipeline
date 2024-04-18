@@ -19,7 +19,7 @@ pipeline {
                 sh '''
                     cd /root/my_pipeline
                     git pull
-                    python3 submit_job.py
+                    python3 scripts/submit_job.py
                 '''
             }
         }
