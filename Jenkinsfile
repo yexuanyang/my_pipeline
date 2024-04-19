@@ -11,7 +11,7 @@ pipeline {
             steps {
                 sh 'make LLVM=1 -j80 > compile.txt'
                 sh 'tail -10 < compile.txt'
-                archiveArtifacts artifacts: 'arch/**/Image', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
+                archiveArtifacts artifacts: 'arch/**/Image,compile.txt', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
             }
         }
         stage('Post') {
