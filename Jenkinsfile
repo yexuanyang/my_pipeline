@@ -11,16 +11,18 @@ pipeline {
             steps {
                 sh 'make LLVM=1 -j80 > compile.txt'
                 sh 'tail -10 < compile.txt'
+                archiveArtifacts artifacts: 'arch/**/Image', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
             }
         }
         stage('Post') {
             steps {
                 sh 'scp -rq ./arch/ yyx@10.161.28.28:~/images/rros_arch_jenkins'
-                sh '''
-                    cd /root/my_pipeline
-                    git pull
-                    python3 scripts/submit_job.py
-                '''
+                dir('/root/my_pipeline') {
+                    sh '''
+                        git pull
+                        python3 scripts/submit_job.py
+                    '''
+                }
             }
         }
 
