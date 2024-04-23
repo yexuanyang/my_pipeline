@@ -3,7 +3,8 @@ import yaml
 import xmlrpc.client
 import os
 
-job_dir = '../tests/jobs_defination'
+script_dir = os.path.dirname(os.path.abspath(__file__))
+job_dir = os.path.join(script_dir, '../tests/jobs_defination')
 rpc_url = 'http://admin:longrandomtokenadmin@10.161.28.28:9999/RPC2/'
 
 def submit_single_job(job_path, rpc_url):
