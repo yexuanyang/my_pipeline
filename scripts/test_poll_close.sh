@@ -1,6 +1,5 @@
 cd /root
-ms
 ./mk.sh
-yyx
+libevl
 ls
 ./poll-close
