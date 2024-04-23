@@ -1,5 +1,5 @@
 device_type: qemu
-job_name: RROS_TEST test basic_bash.yaml
+job_name: RROS_TEST test poll-close in libevl
 
 timeouts:
   job:
@@ -51,5 +51,5 @@ actions:
     definitions:
     - repository: https://github.com/yexuanyang/my_pipeline.git
       from: git
-      path: tests/basic_bash.yaml
-      name: basic-bash
+      path: tests/test_defination/test_poll_close.yaml
+      name: test_poll_close
