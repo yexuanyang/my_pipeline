@@ -1,4 +1,3 @@
 cd /root
-ms
-yyx
+libevl
 ls
