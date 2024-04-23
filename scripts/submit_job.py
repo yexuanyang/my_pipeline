@@ -3,8 +3,7 @@ import yaml
 import xmlrpc.client
 import os
 
-basic_job_dir = '../tests/jobs_defination/basic_job'
-libevl_job_dir = '../tests/jobs_defination/libevl_test'
+job_dir = '../tests/jobs_defination'
 rpc_url = 'http://admin:longrandomtokenadmin@10.161.28.28:9999/RPC2/'
 
 def submit_single_job(job_path, rpc_url):
@@ -20,5 +19,4 @@ def submit_all_jobs_in_directory(directory, rpc_url):
             file_path = os.path.join(root, file_name)
             submit_single_job(file_path, rpc_url)
 
-submit_all_jobs_in_directory(basic_job_dir, rpc_url)
-submit_all_jobs_in_directory(libevl_job_dir, rpc_url)
+submit_all_jobs_in_directory(job_dir, rpc_url)
