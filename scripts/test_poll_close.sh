@@ -1,5 +1,5 @@
 cd /root
 ./mk.sh
-libevl
+cd /root/libevl-rros/build-dest/tests/
 ls
 ./poll-close
