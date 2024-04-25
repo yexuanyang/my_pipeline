@@ -1,0 +1,13 @@
+metadata:
+  format: Lava-Test Test Defination 1.0
+  name: basic-bash
+  description: "Basic (Level 1) Test evl poll_nested in RROS"
+  maintainer:
+    - myemailyyxg@gmail.com
+
+run:
+  steps:
+    - lava-test-case test-pwd --shell pwd
+    - lava-test-case test-ls --shell ls $(pwd)
+    - chmod +x scripts/test_poll_nested.sh
+    - lava-test-case test-script --shell ./scripts/test_poll_nested.sh
