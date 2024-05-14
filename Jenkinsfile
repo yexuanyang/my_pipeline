@@ -16,7 +16,7 @@ pipeline {
         }
         stage('Post') {
             steps {
-                sh 'scp -rq ./arch/ yyx@10.161.28.28:~/images/rros_arch_jenkins'
+                sh 'rsync -avz --del ./arch/ yyx@10.161.28.28:~/images/rros_arch_jenkins'
                 dir('/root/my_pipeline') {
                     sh '''
                         git pull
