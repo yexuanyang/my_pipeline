@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+    	ARCH = 'arm64'
+	CROSS_COMPILE = 'aarch64-linux-gnu-'
+    }
+
     stages{
         stage('Pre-Build') {
             steps {
