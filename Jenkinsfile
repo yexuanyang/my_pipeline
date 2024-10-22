@@ -27,6 +27,7 @@ pipeline {
     stages{
         stage('Pre-Build') {
             steps {
+                echo "base brach ${CHANGE_TARGET}"
                 echo "current branch ${GIT_BRANCH}"
                 script {
                     def current_branch = env.GIT_BRANCH
