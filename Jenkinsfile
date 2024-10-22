@@ -1,6 +1,24 @@
 pipeline {
     agent any
+    triggers {
+        GenericTrigger(
+        genericVariables: [
+        [key: 'pr_to_ref', value: '$.pull_request.base.ref']
+        ],
 
+        causeString: 'Triggered on $pr_to_ref',
+
+        token: 'loongarch',
+        tokenCredentialId: '',
+
+        printContributedVariables: true,
+        printPostContent: true,
+
+        silentResponse: false,
+        
+        shouldNotFlatten: false,
+        )
+    }
     environment {
     	ARCH = 'arm64'
 	    CROSS_COMPILE = 'aarch64-linux-gnu-'
