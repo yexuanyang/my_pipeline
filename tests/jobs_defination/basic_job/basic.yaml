@@ -18,7 +18,6 @@ context:
   cpu: cortex-a57
   extra_options:
   - -smp 1
-  - -device virtio-blk-device,drive=hd0
   - -append "console=ttyAMA0 root=/dev/vda2 rw"
 
 actions: 
@@ -31,7 +30,7 @@ actions:
         image_arg: -kernel {kernel}
         url: file:///data/user_home/yyx/images/rros_arch_jenkins/arm64/boot/Image
       rootfs:
-        image_arg: -drive if=none,file={rootfs},id=hd0,format=raw
+        image_arg: -drive file={rootfs},format=raw,index=0,media=disk
         url: file:///data/user_home/yyx/images/lhy_2022-01-28-raspios-bullseye-arm64_poll.img
 - boot:
     method: qemu
