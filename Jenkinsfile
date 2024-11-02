@@ -34,12 +34,12 @@ pipeline {
                     }
                 }
                 sh 'tail -10 < /tmp/compile.txt'
-                archiveArtifacts artifacts: 'arch/**/Image,compile.txt,arch/**/vmlinux.efi', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
             }
         }
         stage('Post') {
             steps {
-                sh 'rsync -avz --del ./arch/ yyx@10.161.28.28:~/images/rros_arch_jenkins'
+                sh 'ssh yyx@10.161.28.28 mkdir -p /data/jenkins_images/rros/${BRANCH_NAME}/${BUILD_NUMBER}'
+                sh 'rsync -avz --del ./arch/ yyx@10.161.28.28:/data/jenkins_images/rros/${BRANCH_NAME}/${BUILD_NUMBER}/arch'
                 dir('/root/my_pipeline') {
                     sh '''
                         git pull
@@ -49,5 +49,11 @@ pipeline {
             }
         }
 
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'arch/**/Image,compile.txt,arch/**/vmlinux.efi', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
+        }
     }
 }
