@@ -3,12 +3,12 @@ import sys
 import os
 
 lava_rpc_url = 'http://admin:longrandomtokenadmin@10.161.28.28:9999/RPC2/'
-job_id_dir_path = "/data/user_home/yyx/lava_jobs/rros/{}"
+job_id_dir_path = "/lava_jobs/rros/{}"
 
 def cancel(pr_number: str):
     job_id_file_path = job_id_dir_path.format(pr_number) + "/jobs.txt"
     if os.path.exists(job_id_file_path) == False:
-        os.makedirs(job_id_dir_path.format(pr_number))
+        os.makedirs(job_id_dir_path.format(pr_number), exist_ok=True)
         return
 
     server = xmlrpc.client.ServerProxy(lava_rpc_url)
