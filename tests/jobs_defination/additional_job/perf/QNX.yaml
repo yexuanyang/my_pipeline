@@ -1,6 +1,9 @@
 device_type: qemu
 job_name: RROS_ADDITIONAL_TEST perf QNX.yaml
 
+metadata:
+  test: This_is_a_test_metadata
+
 timeouts:
   job:
     minutes: 15

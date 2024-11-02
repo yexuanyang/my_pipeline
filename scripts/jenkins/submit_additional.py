@@ -53,7 +53,7 @@ lava_rpc_url = 'http://admin:longrandomtokenadmin@10.161.28.28:9999/RPC2/'
 perf_jos_defination_prefix = '/root/my_pipeline/tests/jobs_defination/additional_job/perf'
 perf_test_defination_prefix = '/root/my_pipeline/tests/test_defination/additional_job/perf'
 job_id_file_path = "/data/user_home/yyx/lava_jobs/rros/{}/jobs.txt"
-rros_image_path = "/data/user_home/yyx/jenkins_images/rros/{}/{}/archive/arch/{}/boot/Image"
+rros_image_path = "file:///data/user_home/yyx/jenkins_images/rros/{}/{}/archive/arch/{}/boot/Image"
 
 def post_rbot_error_arg(info: str):
     post_data = {
@@ -134,7 +134,8 @@ def perf_test(raw_args: list):
             # 修改config: arch, token, fs, image
             config = yaml.load(f, yaml.FullLoader)
             config["notify"]["callbacks"][0]["token"] = args.prNumber
-            config["actions"][0]["deploy"]["images"]["kernel"]["url"] = rros_image_path.format(args.prNumber, args.buildNumber, "arm64")
+            # config["actions"][0]["deploy"]["images"]["kernel"]["url"] = rros_image_path.format(args.prNumber, args.buildNumber, "arm64")
+            config["actions"][0]["deploy"]["images"]["kernel"]["url"] = "file:///data/user_home/yyx/images/rros_arch_jenkins/arm64/boot"
             config = yaml.dump(config)
             server = xmlrpc.client.ServerProxy(lava_rpc_url)
             jobid = server.scheduler.submit_job(config)
