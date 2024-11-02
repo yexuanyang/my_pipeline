@@ -8,7 +8,7 @@ job_id_dir_path = "/data/user_home/yyx/lava_jobs/rros/{}"
 def cancel(pr_number: str):
     job_id_file_path = job_id_dir_path.format(pr_number) + "/jobs.txt"
     if os.path.exists(job_id_file_path) == False:
-        os.makedirs(job_id_dir_path)
+        os.makedirs(job_id_dir_path.format(pr_number))
         return
 
     server = xmlrpc.client.ServerProxy(lava_rpc_url)
