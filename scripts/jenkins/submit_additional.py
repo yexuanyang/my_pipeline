@@ -133,7 +133,7 @@ def perf_test(raw_args: list):
         with open(jobs_defination_path) as f:
             # 修改config: arch, token, fs, image
             config = yaml.load(f, yaml.FullLoader)
-            config["notify"]["callbacks"][0]["token"] = args.prNumber
+            config["notify"]["callbacks"][0]["token"] = str(args.prNumber)
             # config["actions"][0]["deploy"]["images"]["kernel"]["url"] = rros_image_path.format(args.prNumber, args.buildNumber, "arm64")
             config["actions"][0]["deploy"]["images"]["kernel"]["url"] = "file:///data/user_home/yyx/images/rros_arch_jenkins/arm64/boot"
             config = yaml.dump(config)
