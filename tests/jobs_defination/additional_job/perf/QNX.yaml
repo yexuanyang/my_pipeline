@@ -53,7 +53,7 @@ actions:
     definitions:
     - repository: https://github.com/yexuanyang/my_pipeline.git
       from: git
-      path: /root/my_pipeline/tests/test_defination/additional_job/perf/QNX.yaml
+      path: tests/test_defination/additional_job/perf/QNX.yaml
       name: perf-QNX
 notify:
   criteria:
