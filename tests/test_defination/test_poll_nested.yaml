@@ -1,6 +1,6 @@
 metadata:
   format: Lava-Test Test Defination 1.0
-  name: basic-bash
+  name: poll-nested
   description: "Basic (Level 1) Test evl poll_nested in RROS"
   maintainer:
     - myemailyyxg@gmail.com
