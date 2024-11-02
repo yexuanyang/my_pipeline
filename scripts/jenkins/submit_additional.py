@@ -50,8 +50,8 @@ test_rtos_mapping = {
 
 rbot_error_arg_url = 'http://10.161.28.28:30000/lava-callback/error-arg'
 lava_rpc_url = 'http://admin:longrandomtokenadmin@10.161.28.28:9999/RPC2/'
-perf_jos_defination_prefix = '/root/my_pipeline/tests/jobs_defination/additional_job/perf'
-perf_test_defination_prefix = '/root/my_pipeline/tests/test_defination/additional_job/perf'
+perf_jos_defination_prefix = './tests/jobs_defination/additional_job/perf'
+perf_test_defination_prefix = './tests/test_defination/additional_job/perf'
 job_id_file_path_tmplate = "/data/user_home/yyx/lava_jobs/rros/{}/jobs.txt"
 rros_image_path = "file:///data/user_home/yyx/jenkins_images/rros/{}/{}/archive/arch/{}/boot/Image"
 
