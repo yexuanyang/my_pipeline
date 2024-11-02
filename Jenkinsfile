@@ -37,9 +37,11 @@ pipeline {
             }
         }
         stage('Archive') {
-            archiveArtifacts artifacts: 'arch/**/Image,compile.txt,arch/**/vmlinux.efi', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
-            sh 'ssh yyx@10.161.28.28 mkdir -p /data/jenkins_images/rros/${BRANCH_NAME}/${BUILD_NUMBER}'
-            sh 'rsync -avz --del ../builds/${BUILD_NUMBER}/archive yyx@10.161.28.28:/data/jenkins_images/rros/${BRANCH_NAME}/${BUILD_NUMBER}/archive'
+            steps {
+                archiveArtifacts artifacts: 'arch/**/Image,compile.txt,arch/**/vmlinux.efi', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
+                sh 'ssh yyx@10.161.28.28 mkdir -p /data/jenkins_images/rros/${BRANCH_NAME}/${BUILD_NUMBER}'
+                sh 'rsync -avz --del ../builds/${BUILD_NUMBER}/archive yyx@10.161.28.28:/data/jenkins_images/rros/${BRANCH_NAME}/${BUILD_NUMBER}/archive'
+            }
         }
         stage('Post') {
             steps {
