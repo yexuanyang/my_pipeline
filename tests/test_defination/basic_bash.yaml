@@ -9,5 +9,5 @@ run:
   steps:
     - lava-test-case test-pwd --shell pwd
     - lava-test-case test-ls --shell ls $(pwd)
-    - chmod +x scripts/basic_bash.sh
-    - lava-test-case test-script --shell ./scripts/basic_bash.sh
+    - chmod +x scripts/lava/basic_bash.sh
+    - lava-test-case test-script --shell ./scripts/lava/basic_bash.sh

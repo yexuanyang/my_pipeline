@@ -9,5 +9,5 @@ run:
   steps:
     - lava-test-case test-pwd --shell pwd
     - lava-test-case test-ls --shell ls $(pwd)
-    - chmod +x scripts/test_poll_nested.sh
-    - lava-test-case test-script --shell ./scripts/test_poll_nested.sh
+    - chmod +x scripts/lava/test_poll_nested.sh
+    - lava-test-case test-script --shell ./scripts/lava/test_poll_nested.sh

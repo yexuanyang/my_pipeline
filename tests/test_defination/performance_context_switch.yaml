@@ -9,5 +9,5 @@ run:
   steps:
     - lava-test-case test-pwd --shell pwd
     - lava-test-case test-ls --shell ls $(pwd)
-    - chmod +x scripts/performance_context_switch.sh
-    - lava-test-case test-context_switch --shell ./scripts/performance_context_switch.sh
+    - chmod +x scripts/lava/performance_context_switch.sh
+    - lava-test-case test-context_switch --shell ./scripts/lava/performance_context_switch.sh
