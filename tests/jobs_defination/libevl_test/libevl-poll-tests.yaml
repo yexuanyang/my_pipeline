@@ -1,5 +1,5 @@
 device_type: qemu
-job_name: RROS_TEST test poll-close in libevl
+job_name: RROS_TEST test poll-* in libevl
 
 timeouts:
   job:
@@ -52,3 +52,7 @@ actions:
       from: git
       path: tests/test_defination/test_poll_close.yaml
       name: test_poll_close
+    - repository: https://github.com/yexuanyang/my_pipeline.git
+      from: git
+      path: tests/test_defination/test_poll_nested.yaml
+      name: test_poll_nested
