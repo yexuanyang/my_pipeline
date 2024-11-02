@@ -1,0 +1,13 @@
+metadata:
+  format: Lava-Test Test Defination 1.0
+  name: perf-QNX
+  description: "perf QNX test"
+  maintainer:
+    - wonderboy512@163.com
+
+run:
+  steps:
+    - lava-test-case test-pwd --shell pwd
+    - lava-test-case test-ls --shell ls $(pwd)
+    - chmod +x scripts/lava/QNX.sh
+    - lava-test-case test-script --shell ./scripts/lava/QNX.sh
