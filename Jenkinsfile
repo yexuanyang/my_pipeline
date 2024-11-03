@@ -65,6 +65,7 @@ pipeline {
             steps {
                 dir('/root/my_pipeline') {
                     sh '''
+                        git reset --hard origin/HEAD
                         git pull
                         python3 scripts/jenkins/submit_job.py
                     '''
