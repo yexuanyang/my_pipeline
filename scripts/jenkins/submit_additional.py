@@ -20,7 +20,7 @@
 2. -c --compare: compare to (这个需要通过notify.token传到@rros-rbot)
 3. -a --arch: architecture and boards
 4. -s --stress: stress加压  (默认会进行不加压测试, 如果指定了加压, 就需要同时再对比加压和不加压的数据)
-5. --prNumber: pr_number(需要传递给notify.token TODO: 如何引用一个issue comment)
+5. --prNumber: pr_number(需要传递给notify.token)
 
 notify.token里面需要prNumber、--commentNumber
 """
@@ -48,7 +48,7 @@ test_rtos_mapping = {
     "cyclictest"    : ["preempt-rt"],
 }
 
-rbot_error_arg_url = 'http://10.161.28.28:30000/lava-callback/error-arg'
+rbot_reply_comment_url = 'http://10.161.28.28:30000/action/reply-comment'
 lava_rpc_url = 'http://admin:longrandomtokenadmin@10.161.28.28:9999/RPC2/'
 perf_jos_defination_prefix = './tests/jobs_defination/additional_job/perf'
 perf_test_defination_prefix = './tests/test_defination/additional_job/perf'
@@ -56,13 +56,24 @@ job_id_file_path_tmplate = "/lava_jobs/rros/{}/jobs.txt"
 rros_image_path = "file:///data/user_home/yyx/jenkins_images/rros/{}/{}/archive/arch/{}/boot/Image"
 
 def post_rbot_error_arg(info: str):
-    post_data = {
-        'info': info,
+    # #
+    # TODO: 回传的json格式
+    # path: /action/comment
+    # {
+    #     replyComment: <string> (要发送的错误提示信息, markdown格式字符串, 建议从文件里面读取, 而不是硬编码到代码里面)
+    #     issueNumber: <number> (要回复的comment所在的pr的pr number)
+    #     originComment: <number> (要回复的comment id)
+    # }
+    # #
+    data = {
+        'replyComment': info,
     }
     headers = {
         'Content-Type': 'application/json',
     }
-    requests.post(url=rbot_error_arg_url, headers=headers, data=json.dumps(post_data))
+
+    # requests.post(url=rbot_reply_comment_url, headers=headers, data=json.dumps(post_data))
+    requests.post(url=rbot_reply_comment_url, headers=headers, json=data)
     
 
 def perf_test(raw_args: list):
@@ -70,6 +81,8 @@ def perf_test(raw_args: list):
         description="Parsing performance test parameters",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
+
+    # TODO: 增加读取一个参数 --originComment <number>
     
     # -n QNX cyclictest
     parser.add_argument(
@@ -117,6 +130,7 @@ def perf_test(raw_args: list):
     try:
         args = parser.parse_args(raw_args)
     except:
+        # TODO: 让错误信息更详细一点
         post_rbot_error_arg("The passed parameters were not parsed successfully.")
         return
 
@@ -136,6 +150,7 @@ def perf_test(raw_args: list):
             config["notify"]["callbacks"][0]["token"] = str(args.prNumber)
             # config["actions"][0]["deploy"]["images"]["kernel"]["url"] = rros_image_path.format(args.prNumber, args.buildNumber, "arm64")
             config["actions"][0]["deploy"]["images"]["kernel"]["url"] = "file:///data/user_home/yyx/images/rros_arch_jenkins/arm64/boot"
+
             config = yaml.dump(config)
             server = xmlrpc.client.ServerProxy(lava_rpc_url)
             jobid = server.scheduler.submit_job(config)
@@ -163,3 +178,10 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # TODO: 轮询提交的测试任务，全都完成之后，获得测试数据，进行数据分析，形成markdown格式文本之后向Github App的/action/reply-comment发送请求
+    # json 格式
+    # {
+    #     replyComment: <string> (要发送的错误提示信息, markdown格式字符串, 建议从文件里面读取, 而不是硬编码到代码里面)
+    #     issueNumber: <number> (要回复的comment所在的pr的pr number)
+    #     originComment: <number> (要回复的comment id)
+    # }
