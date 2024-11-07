@@ -56,12 +56,22 @@ job_id_file_path_tmplate = "/lava_jobs/rros/{}/jobs.txt"
 rros_image_path = "file:///data/user_home/yyx/jenkins_images/rros/{}/{}/archive/arch/{}/boot/Image"
 
 def post_rbot_error_arg(info: str):
+    # #
+    # TODO: 回传的json格式
+    # {
+    #     info: <string> (要发送的错误提示信息, markdown格式字符串, 建议从文件里面读取, 而不是硬编码到代码里面)
+    #     prNumber: <number> (要回复的comment所在的pr的pr number)
+    #     originComment: <number> (要回复的comment id)
+    # }
+    # #
     post_data = {
         'info': info,
     }
     headers = {
         'Content-Type': 'application/json',
     }
+
+    # TODO: 可以直接指定json=post_data替代data=json.dumps(post_data)
     requests.post(url=rbot_error_arg_url, headers=headers, data=json.dumps(post_data))
     
 
@@ -70,6 +80,8 @@ def perf_test(raw_args: list):
         description="Parsing performance test parameters",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
+
+    # TODO: 增加读取一个参数 --originComment <number>
     
     # -n QNX cyclictest
     parser.add_argument(
@@ -136,6 +148,10 @@ def perf_test(raw_args: list):
             config["notify"]["callbacks"][0]["token"] = str(args.prNumber)
             # config["actions"][0]["deploy"]["images"]["kernel"]["url"] = rros_image_path.format(args.prNumber, args.buildNumber, "arm64")
             config["actions"][0]["deploy"]["images"]["kernel"]["url"] = "file:///data/user_home/yyx/images/rros_arch_jenkins/arm64/boot"
+
+            # TODO: 还需要修改yaml
+            # metadata:
+            #   originComment: <number>
             config = yaml.dump(config)
             server = xmlrpc.client.ServerProxy(lava_rpc_url)
             jobid = server.scheduler.submit_job(config)
