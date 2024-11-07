@@ -2,6 +2,7 @@
 echo "pr_number is ${pr_number}"
 echo "last_build is ${last_build}"
 echo "multi is ${multi}"
+echo "origin_comment is ${comment_id}"
 # prefix=""
 # normal_jobs="$prefix/pr-${pr_number}/${last_build}/jobs"
 # addition_jobs="$prefix/pr-${pr_number}/test-latest/jobs"
