@@ -148,7 +148,29 @@ def perf_test(raw_args: list):
     #     issueNumber: <number> (要回复的comment所在的pr的pr number)
     #     originComment: <number> (要回复的comment id)
     # }
-    post_rbot("QNX: min: 120 avg: 121 max: 122")
+
+    # TODO: 需要给一个html的模板
+    table = """
+<table>
+    <tr>
+        <td></td>
+        <td colspan="3">RROS</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>min</td>
+        <td>avg</td>
+        <td>max</td>
+    </tr>
+    <tr>
+        <td>QNX</td>
+        <td>{}</td>
+        <td>{}</td>
+        <td>{}</td>
+    </tr>
+</table>
+"""
+    post_rbot(table.format(120, 121, 122))
 
 # def SEU_test():
     # pass
