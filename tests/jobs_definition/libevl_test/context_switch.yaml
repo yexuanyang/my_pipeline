@@ -50,5 +50,5 @@ actions:
     definitions:
     - repository: https://github.com/yexuanyang/my_pipeline.git
       from: git
-      path: tests/test_defination/performance_context_switch.yaml
+      path: tests/tests_definition/performance_context_switch.yaml
       name: performance_context_switch

@@ -1,5 +1,5 @@
 metadata:
-  format: Lava-Test Test Defination 1.0
+  format: Lava-Test Test definition 1.0
   name: basic-bash
   description: "Basic (Level 1) Test basic bash in RROS"
   maintainer:

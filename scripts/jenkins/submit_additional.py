@@ -40,8 +40,8 @@ test_rtos_mapping = {
 }
 
 rbot_reply_comment_url = 'http://10.161.28.28:30000/action/reply-comment'
-perf_jos_defination_prefix = './tests/jobs_defination/additional_job/perf'
-perf_test_defination_prefix = './tests/test_defination/additional_job/perf'
+perf_jos_definition_prefix = './tests/jobs_definition/additional_job/perf'
+perf_tests_definition_prefix = './tests/tests_definition/additional_job/perf'
 job_id_file_path_tmplate = "/lava_jobs/rros/{}/jobs.txt"
 rros_image_path = "file:///data/user_home/yyx/jenkins_images/rros/{}/{}/archive/arch/{}/boot/Image"
 
@@ -121,8 +121,8 @@ def perf_test(raw_args: list):
     # 向lava提交测试任务
     new_job_ids = []
     for test_name in args.name:
-        jobs_defination_path = os.path.join(perf_jos_defination_prefix, test_name + ".yaml")
-        with open(jobs_defination_path) as f:
+        jobs_definition_path = os.path.join(perf_jos_definition_prefix, test_name + ".yaml")
+        with open(jobs_definition_path) as f:
             # 修改config: arch, token, fs, image
             config = yaml.load(f, yaml.FullLoader)
             config["notify"]["callbacks"][0]["token"] = str(args.prNumber)

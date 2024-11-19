@@ -1,5 +1,5 @@
 metadata:
-  format: Lava-Test Test Defination 1.0
+  format: Lava-Test Test definition 1.0
   name: context_switch
   description: "Basic (Level 1) performance test about context_switch in RROS"
   maintainer:

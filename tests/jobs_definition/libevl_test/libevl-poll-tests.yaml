@@ -50,9 +50,9 @@ actions:
     definitions:
     - repository: https://github.com/yexuanyang/my_pipeline.git
       from: git
-      path: tests/test_defination/test_poll_close.yaml
+      path: tests/tests_definition/test_poll_close.yaml
       name: test_poll_close
     - repository: https://github.com/yexuanyang/my_pipeline.git
       from: git
-      path: tests/test_defination/test_poll_nested.yaml
+      path: tests/tests_definition/test_poll_nested.yaml
       name: test_poll_nested

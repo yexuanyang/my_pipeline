@@ -50,5 +50,5 @@ actions:
     definitions:
     - repository: https://github.com/yexuanyang/my_pipeline.git
       from: git
-      path: tests/test_defination/basic_bash.yaml
+      path: tests/tests_definition/basic_bash.yaml
       name: basic-bash
