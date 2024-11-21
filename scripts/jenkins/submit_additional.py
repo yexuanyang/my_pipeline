@@ -76,6 +76,10 @@ def compare_datas() -> str:
     pass
 
 def perf_test(raw_args: list):
+    global prNumber
+    global originComment
+    global buildNumber
+
     parser = argparse.ArgumentParser(
         description="Parsing performance test parameters",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -114,9 +118,9 @@ def perf_test(raw_args: list):
         post_rbot("The passed parameters were not parsed successfully.")
         return
 
-    job_id_file_path = job_id_file_path_tmplate.format(args.prNumber)
+    job_id_file_path = job_id_file_path_tmplate.format(prNumber)
     # 取消未完成的lava job
-    lava.cancel_jobs(str(args.prNumber))
+    lava.cancel_jobs(str(prNumber))
 
     # 向lava提交测试任务
     new_job_ids = []
@@ -125,15 +129,15 @@ def perf_test(raw_args: list):
         with open(jobs_definition_path) as f:
             # 修改config: arch, token, fs, image
             config = yaml.load(f, yaml.FullLoader)
-            config["notify"]["callbacks"][0]["token"] = str(args.prNumber)
+            config["notify"]["callbacks"][0]["token"] = str(prNumber)
             # TODO: 先固定路径
-            # config["actions"][0]["deploy"]["images"]["kernel"]["url"] = rros_image_path.format(args.prNumber, args.buildNumber, "arm64")
+            # config["actions"][0]["deploy"]["images"]["kernel"]["url"] = rros_image_path.format(prNumber, buildNumber, "arm64")
             config["actions"][0]["deploy"]["images"]["kernel"]["url"] = "file:///data/user_home/yyx/images/rros_arch_jenkins/arm64/boot"
             config = yaml.dump(config)
             jobid = lava.server.scheduler.submit_job(config)
             # TODO: 需要记录每个test job的测试类型, 比如QNX、cyclictest等等
             new_job_ids.append(str(jobid))
-    
+
     # 写入jobid文件
     with open(job_id_file_path, mode="w", encoding="UTF8") as f:
         f.write('\n'.join(new_job_ids))
