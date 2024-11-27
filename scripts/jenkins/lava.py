@@ -2,12 +2,14 @@ import xmlrpc.client
 import sys
 import os
 import time
+from robot import post_rbot
 
 lava_rpc_url = 'http://admin:longrandomtokenadmin@10.161.28.28:9999/RPC2/'
 server = xmlrpc.client.ServerProxy(lava_rpc_url)
 job_id_dir_path = "/lava_jobs/rros/{}"
 
 def polling_lava_result(jobs: list) -> dict:
+    # TODO: 可以设置一个最长的等待时间
     jobs_results = {}
     jobs_set = {id for id in jobs}
     while len(jobs_set) != 0:
@@ -24,7 +26,7 @@ def polling_lava_result(jobs: list) -> dict:
         jobs_set = next_set
     return jobs_results
 
-def cancel_jobs(pr_number: str):
+def cancel_jobs(pr_number: str, comment_id: int=None):
     job_id_file_path = job_id_dir_path.format(pr_number) + "/jobs.txt"
     if os.path.exists(job_id_file_path) == False:
         os.makedirs(job_id_dir_path.format(pr_number), exist_ok=True)
@@ -36,7 +38,9 @@ def cancel_jobs(pr_number: str):
     for jobid in content:
         server.scheduler.cancel_job(jobid.strip())
 
+    if comment_id is not None:
+        post_rbot("Test jobs clean successfully.", int(pr_number), comment_id)
+
 if __name__ == "__main__":
     # 清除lava jobs
-    # cancel_jobs(sys.argv[1])
-    polling_lava_result(['576'])
+    cancel_jobs(str(sys.argv[1]), eval(sys.argv[2]))

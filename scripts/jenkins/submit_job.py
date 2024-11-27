@@ -22,3 +22,6 @@ def submit_all_jobs_in_directory(directory, rpc_url):
 
 submit_all_jobs_in_directory(job_dir, rpc_url)
 # TODO: 轮询lava，查看任务完成情况，如果任务全都完成了, 任务正常结束；否则异常退出，抛出一个错误
+# 1. 轮询结果
+# 2. 判断lava里的job是否有fail
+# 3. 把jenkins pipeline的失败反馈给github

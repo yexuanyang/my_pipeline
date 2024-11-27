@@ -23,6 +23,7 @@ import requests
 import json
 import lava
 import re
+from robot import post_rbot
 
 tests = ['perf']    # 后续可以添加其他test类型
 
@@ -39,27 +40,11 @@ test_rtos_mapping = {
     "cyclictest"    : ["preempt-rt"],
 }
 
-rbot_reply_comment_url = 'http://10.161.28.28:30000/action/reply-comment'
 perf_jos_definition_prefix = './tests/jobs_definition/additional_job/perf'
 perf_tests_definition_prefix = './tests/tests_definition/additional_job/perf'
 job_id_file_path_tmplate = "/lava_jobs/rros/{}/jobs.txt"
 rros_image_path = "file:///data/user_home/yyx/jenkins_images/rros/{}/{}/archive/arch/{}/boot/Image"
-
 prNumber, originComment, buildNumber = None, None, None
-
-def post_rbot(info: str):
-    # TODO: 给一个APP的参数说明文档链接
-    data = {
-        'replyComment': info,
-        'issueNumber': prNumber,
-        'originComment': originComment,
-    }
-    headers = {
-        'Content-Type': 'application/json',
-    }
-
-    # requests.post(url=rbot_reply_comment_url, headers=headers, data=json.dumps(post_data))
-    requests.post(url=rbot_reply_comment_url, headers=headers, json=data)
 
 def process_QNX_log(log: str) -> str:
     # TODO: 把所有的结果保存在json里
@@ -115,7 +100,7 @@ def perf_test(raw_args: list):
     try:
         args = parser.parse_args(raw_args)
     except:
-        post_rbot("The passed parameters were not parsed successfully.")
+        post_rbot("The passed parameters were not parsed successfully.", prNumber, originComment)
         return
 
     job_id_file_path = job_id_file_path_tmplate.format(prNumber)
@@ -130,7 +115,7 @@ def perf_test(raw_args: list):
             # 修改config: arch, token, fs, image
             config = yaml.load(f, yaml.FullLoader)
             config["notify"]["callbacks"][0]["token"] = str(prNumber)
-            # TODO: 先固定路径
+            # TODO: 先使用固定路径
             # config["actions"][0]["deploy"]["images"]["kernel"]["url"] = rros_image_path.format(prNumber, buildNumber, "arm64")
             config["actions"][0]["deploy"]["images"]["kernel"]["url"] = "file:///data/user_home/yyx/images/rros_arch_jenkins/arm64/boot/Image"
             config = yaml.dump(config)
@@ -174,7 +159,7 @@ def perf_test(raw_args: list):
     </tr>
 </table>
 """
-    post_rbot(table.format(120, 121, 122))
+    post_rbot(table.format(120, 121, 122), prNumber, originComment)
 
 # def SEU_test():
     # pass
@@ -192,7 +177,7 @@ def main():
     args = sys.argv[8:]
 
     if sys.argv[7] not in tests:
-        post_rbot("You should specify the correct test type: perf (or SEU...).")
+        post_rbot("You should specify the correct test type: perf (or SEU...).", prNumber, originComment)
         return
 
     # 根据测试的类型来调用相应的测试函数来处理参数
