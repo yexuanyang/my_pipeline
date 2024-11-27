@@ -52,15 +52,19 @@ def polling_lava_result(jobs: list) -> dict:
         time.sleep(10)
         next_set = jobs_set.copy()
         for id in jobs_set:
-            state = server.scheduler.job_health(id)['job_health']
-            if state == 'Complete':
-                next_set.remove(id)
+            state = server.scheduler.job_state(id)['job_state']
+            health = server.scheduler.job_health(id)['job_health']
+
+            if health == 'Complete':
                 if not has_fail(id):
                     result = server.scheduler.job_output(id).data.decode('utf-8')
                     jobs_results['id'] = result
                 else:
                     # TODO: 表格里数据写成fail
                     pass
+            
+            if state == "Finished":
+                next_set.remove(id)
             else:
                 break
         jobs_set = next_set
