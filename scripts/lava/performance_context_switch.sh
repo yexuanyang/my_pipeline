@@ -1,3 +1,7 @@
+#!/bin/sh
+
+set -e -u
+
 cd /root
 ./mk.sh
 cd performance_tests-main/rros

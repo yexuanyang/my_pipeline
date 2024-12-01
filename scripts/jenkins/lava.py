@@ -57,10 +57,12 @@ def polling_lava_result(jobs: list) -> dict:
 
             if health == 'Complete':
                 if not has_fail(id):
+                    # `result` type is `str`
                     result = server.scheduler.job_output(id).data.decode('utf-8')
                     jobs_results['id'] = result
                 else:
                     # TODO: 表格里数据写成fail
+                    jobs_results['id'] = 'fail'
                     pass
             
             if state == "Finished":
