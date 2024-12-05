@@ -25,9 +25,11 @@ def submit_all_jobs_in_directory(directory, rpc_url):
     return jobs
 
 if __name__ == "__main__":
+    print("Start to submit")
     jobs = submit_all_jobs_in_directory(job_dir, rpc_url)
     jobs_results = polling_lava_result(jobs)
     pipeline_is_fail = "fail" in jobs_results.values()
     if pipeline_is_fail:
         # 把pipeline的失败反馈到github
+        print("pipeline fail, notified to github")
         exit(1)
