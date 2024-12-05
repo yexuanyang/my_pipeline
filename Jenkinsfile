@@ -13,7 +13,7 @@ pipeline {
                     sh '''
                     if [[ $s == PR-* ]]; then
                         export comment_id="None"
-                        export pr_number=$(echo ${BRANCH_NAME} | grep -o '[0-9]\+')
+                        export pr_number=$(echo ${BRANCH_NAME} | awk -F'-' '{print $2}')
                         export last_build=${BUILD_NUMBER}
                         export multi="true"
                         bash /root/my_pipeline/scripts/jenkins/clean.sh
