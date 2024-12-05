@@ -31,7 +31,7 @@ def stop_build(pr_number: int, build_id: int):
 
     # 这里只需要删除PR的正确性测试就可以了, 对于其他分支上的可以不删除
     # stop_url = "http://10.161.28.28:8989/job/build_rros/job/PR-{}/{}/stop".format(build_id)
-    stop_url = "http://10.161.28.28:8989/job/build_rros/job/PR-{}/{}/stop".format(pr_number, build_id)
+    stop_url = "http://10.161.28.28:8989/job/build_rros/job/PR-{}/{}/stop".format(pr_number, build_id-1)
 
     response = requests.post(stop_url, headers=headers, data=form_data)
 
