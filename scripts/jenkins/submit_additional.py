@@ -116,8 +116,8 @@ def perf_test(raw_args: list):
             config = yaml.load(f, yaml.FullLoader)
             config["notify"]["callbacks"][0]["token"] = str(prNumber)
             # TODO: 先使用固定路径
-            # config["actions"][0]["deploy"]["images"]["kernel"]["url"] = rros_image_path.format(prNumber, buildNumber, "arm64")
-            config["actions"][0]["deploy"]["images"]["kernel"]["url"] = "file:///data/user_home/yyx/images/rros_arch_jenkins/arm64/boot/Image"
+            config["actions"][0]["deploy"]["images"]["kernel"]["url"] = rros_image_path.format(prNumber, buildNumber, "arm64")
+            # config["actions"][0]["deploy"]["images"]["kernel"]["url"] = "file:///data/user_home/yyx/images/rros_arch_jenkins/arm64/boot/Image"
             config = yaml.dump(config)
             jobid = lava.server.scheduler.submit_job(config)
             # TODO: 需要记录每个test job的测试类型, 比如QNX、cyclictest等等
