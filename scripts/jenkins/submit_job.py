@@ -24,9 +24,15 @@ def submit_all_jobs_in_directory(directory, rpc_url):
             jobs.append(submit_single_job(file_path, rpc_url))
     return jobs
 
+def submit_all_jobs_in_dir_list(dir_list, rpc_url):
+    jobs = []
+    for dir in dir_list:
+        jobs.extend(submit_all_jobs_in_directory(dir, rpc_url))
+    return jobs
+
 if __name__ == "__main__":
     print("Start to submit")
-    jobs = submit_all_jobs_in_directory(job_dir, rpc_url)
+    jobs = submit_all_jobs_in_dir_list([job_dir+'/basic_job'], rpc_url)
     jobs_results = polling_lava_result(jobs)
     pipeline_is_fail = "fail" in jobs_results.values()
     if pipeline_is_fail:
