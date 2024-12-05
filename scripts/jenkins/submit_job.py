@@ -30,4 +30,4 @@ if __name__ == "__main__":
     pipeline_is_fail = "fail" in jobs_results.values()
     if pipeline_is_fail:
         # 把pipeline的失败反馈到github
-        pass
+        exit(1)
