@@ -11,7 +11,8 @@ pipeline {
             steps {
                 dir('/root/my_pipeline') {
                     sh '''
-                    if [[ $s == PR-* ]]; then
+                    #!/bin/bash
+                    if [[ ${BRANCH_NAME} == PR-* ]]; then
                         export comment_id="None"
                         export pr_number=$(echo ${BRANCH_NAME} | awk -F'-' '{print $2}')
                         export last_build=${BUILD_NUMBER}
