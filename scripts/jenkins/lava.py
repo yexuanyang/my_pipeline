@@ -43,7 +43,7 @@ def has_fail(job_id: str):
             print("has_fail: fail_item {}".format(item))
     else:
         print("Access {} with {} error, content is not found".format(url, xpath))
-    return fail_number == 0
+    return fail_number != 0
 
 def polling_lava_result(jobs: list) -> dict:
     jobs_results = {}
