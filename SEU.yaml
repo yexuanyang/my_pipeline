@@ -1,0 +1,81 @@
+actions:
+- deploy:
+    images:
+      kernel:
+        image_arg: -kernel {kernel}
+        url: file:///data/user_home/yyx/images/pvpanic_Image
+      rootfs:
+        image_arg: -drive file={rootfs},format=qcow2,index=0,media=disk
+        url: file:///data/user_home/yyx/images/rros-rasp.qcow2
+    timeout:
+      minutes: 5
+    to: tmpfs
+- boot:
+    auto_login:
+      login_prompt: 'raspberrypi login:'
+      password: 519ailab
+      password_prompt: 'Password:'
+      username: root
+    media: tmpfs
+    method: qemu
+    prompts:
+    - 'root@raspberrypi:'
+    timeout:
+      minutes: 5
+    fault_inject:
+        commands: 
+        - autoinject 10 1s 2s ram
+        - loginject /tmp/foo.csv
+        stdout: /tmp/test.out
+        stderr: /tmp/test.err
+        socket: /tmp/qmp.sock
+- test:
+    timeout:
+      minutes: 10
+    definitions:
+    - repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: apache-server
+          description: "server installation"
+          os:
+          - debian
+          scope:
+          - functional
+        run:
+          steps:
+          - echo "hello"
+          - sleep 1m
+          - echo c > /proc/sysrq-trigger
+          - sleep 1m
+      # remember to use -y to allow apt to proceed without interaction
+      # -q simplifies the apt output for logging.
+      from: inline
+      name: apache-server
+      path: inline/apache-server.yaml
+context:
+  arch: aarch64
+  cpu: cortex-a57
+  extra_options:
+  - -smp 1
+  - -append "console=ttyAMA0 root=/dev/vda2 rw"
+  - -qmp unix:/tmp/qmp.sock,server=on,wait=off
+  - -s
+  - -device pvpanic-pci
+  - -action shutdown=pause,panic=none
+  guestfs_interface: virtio
+  machine: virt
+  memory: 2048
+  netdevice: user,hostfwd=::2222-:22
+  monitor: telnet::4444,server=on,wait=off
+device_type: qemu
+job_name: RROS_TEST test basic_bash.yaml
+priority: medium
+timeouts:
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+  job:
+    minutes: 15
+visibility: public

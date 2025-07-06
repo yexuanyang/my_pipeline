@@ -1,5 +1,5 @@
 device_type: qemu
-job_name: RROS_TEST test basic_bash.yaml
+job_name: linux test basic_bash.yaml
 
 timeouts:
   job:
@@ -18,8 +18,8 @@ context:
   cpu: cortex-a57
   extra_options:
   - -smp 1
-  - -append "console=ttyAMA0 root=/dev/vda2 rw"
-
+  - -append "console=ttyAMA0 root=/dev/vda rw"
+ 
 actions: 
 - deploy:
     timeout: 
@@ -28,27 +28,37 @@ actions:
     images:
       kernel:
         image_arg: -kernel {kernel}
-        url: file:///data/user_home/yyx/images/rros_arch_jenkins/arm64/boot/Image
+        url: file:///root/ci/jenkins_data/active_space/archive/arch/arm64/boot/Image
       rootfs:
         image_arg: -drive file={rootfs},format=raw,index=0,media=disk
-        url: file:///data/user_home/yyx/images/lhy_2022-01-28-raspios-bullseye-arm64_poll.img
+        url: file:///root/ubuntu-22.04-server-cloudimg-arm64-root.img
 - boot:
     method: qemu
     media: tmpfs
     timeout:
       minutes: 5
     auto_login:
-      login_prompt: "raspberrypi login:"
+      login_prompt: "ubuntu login:"
       username: root
       password_prompt: "Password:"
-      password: 519ailab
+      password: root
     prompts:
-    - "root@raspberrypi:"
+    - "root@ubuntu:"
 - test:
     timeout:
       minutes: 5
     definitions:
-    - repository: https://github.com/yexuanyang/my_pipeline.git
-      from: git
-      path: tests/tests_definition/basic_bash.yaml
+    - repository:
+        metadata:
+          format: "Lava-Test Test Definition 1.0"
+          name: basic-bash
+          description: "Basic (Level 1) Test basic bash in linux"
+          maintainer:
+            - myemailyyxg@gmail.com
+        run:
+          steps:
+            - lava-test-case test-pwd --shell pwd
+            - lava-test-case test-ls --shell ls $(pwd)
+      from: inline
       name: basic-bash
+      path: inline/basic.yaml

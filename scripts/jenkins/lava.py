@@ -5,10 +5,15 @@ import time
 import requests
 from lxml import html
 from robot import post_rbot
+from dotenv import load_dotenv
+load_dotenv()
 
-lava_rpc_url = 'http://admin:longrandomtokenadmin@10.161.28.28:9999/RPC2/'
+lava_rpc_url = os.getenv("LAVA_RPC_URL")
 server = xmlrpc.client.ServerProxy(lava_rpc_url)
 job_id_dir_path = "/lava_jobs/rros/{}"
+lava_host = os.getenv("LAVA_HOST")
+lava_port = os.getenv("LAVA_PORT")
+
 
 def scrape_data(url, xpath):
     try:
@@ -32,7 +37,7 @@ def scrape_data(url, xpath):
 
 def has_fail(job_id: str):
     # 示例URL和XPath
-    url = "http://10.161.28.28:9999/results/{}".format(job_id)
+    url = "http://{}:{}/results/{}".format(lava_host, lava_port, job_id)
     xpath = '//*[@id="table"]/tbody/tr/td[6]'
     extracted_data = scrape_data(url, xpath)
     fail_number = 0

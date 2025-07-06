@@ -3,10 +3,12 @@ import yaml
 import xmlrpc.client
 import os
 from lava import polling_lava_result
+from dotenv import load_dotenv
+load_dotenv()
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 job_dir = os.path.join(script_dir, '../../tests/jobs_definition')
-rpc_url = 'http://admin:longrandomtokenadmin@10.161.28.28:9999/RPC2/'
+rpc_url = os.getenv("LAVA_RPC_URL")
 
 def submit_single_job(job_path, rpc_url):
     with open(job_path) as f:
@@ -36,6 +38,4 @@ if __name__ == "__main__":
     jobs_results = polling_lava_result(jobs)
     pipeline_is_fail = "fail" in jobs_results.values()
     if pipeline_is_fail:
-        # 把pipeline的失败反馈到github
-        print("pipeline fail, notified to github")
         exit(1)
