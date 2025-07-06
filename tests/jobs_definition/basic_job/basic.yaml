@@ -28,7 +28,7 @@ actions:
     images:
       kernel:
         image_arg: -kernel {kernel}
-        url: file:///root/ci/jenkins_data/active_space/archive/arch/arm64/boot/Image
+        url: file:///{{kernel}}
       rootfs:
         image_arg: -drive file={rootfs},format=raw,index=0,media=disk
         url: file:///root/ubuntu-22.04-server-cloudimg-arm64-root.img
