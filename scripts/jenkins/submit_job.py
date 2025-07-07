@@ -14,7 +14,7 @@ rpc_url = os.getenv("LAVA_RPC_URL")
 def submit_single_job(job_path, rpc_url, kernel):
     with open(job_path) as f:
         config = yaml.dump(yaml.load(f, yaml.FullLoader))
-    config.replace("{{kernel}}", kernel)
+    config = config.replace("{{kernel}}", kernel)
     server=xmlrpc.client.ServerProxy(rpc_url)
     jobid=server.scheduler.submit_job(config)
     print("submit job " + str(jobid))

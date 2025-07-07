@@ -18,7 +18,7 @@ context:
   cpu: cortex-a57
   extra_options:
   - -smp 1
-  - -append "console=ttyAMA0 root=/dev/vda rw"
+  - -append "console=ttyAMA0 root=/dev/vda1 rw"
  
 actions: 
 - deploy:
@@ -28,22 +28,22 @@ actions:
     images:
       kernel:
         image_arg: -kernel {kernel}
-        url: file:///{{kernel}}
+        url: file://{{kernel}}
       rootfs:
-        image_arg: -drive file={rootfs},format=raw,index=0,media=disk
-        url: file:///root/ubuntu-22.04-server-cloudimg-arm64-root.img
+        image_arg: -drive file={rootfs},format=qcow2,index=0,media=disk
+        url: file:///root/lava-qemu-flip/ubuntu-mini.qcow2
 - boot:
     method: qemu
     media: tmpfs
     timeout:
       minutes: 5
     auto_login:
-      login_prompt: "ubuntu login:"
+      login_prompt: "rros login:"
       username: root
       password_prompt: "Password:"
       password: root
     prompts:
-    - "root@ubuntu:"
+    - "root@rros:"
 - test:
     timeout:
       minutes: 5
