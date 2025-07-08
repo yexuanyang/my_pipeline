@@ -1,0 +1,93 @@
+actions:
+- deploy:
+    images:
+      kernel:
+        image_arg: -kernel {kernel}
+        url: file://{{kernel}}
+      rootfs:
+        image_arg: -drive file={rootfs},format=qcow2,index=0,media=disk
+        url: file:///root/lava-qemu-flip/ubuntu-mini.qcow2
+    timeout:
+      minutes: 5
+    to: tmpfs
+- boot:
+    auto_login:
+      login_prompt: 'rros login:'
+      password: root
+      password_prompt: 'Password:'
+      username: root
+    media: tmpfs
+    method: qemu
+    prompts:
+    - 'root@rros:'
+    timeout:
+      minutes: 5
+    fault_inject_params:
+        commands: 
+        - source /root/lava-qemu-flip/SysKui/flip_simulation/gdb/fliputils.py
+        - target remote /tmp/gdb-server-register_pc.sock
+        - maintenance packet Qqemu.PhyMemMode:1
+        - monitor savevm foo
+        - loginject --filename /tmp/log-register_pc.csv
+        
+        - snapinject --total-fault-number 1 --min-interval 0 --max-interval 0 --fault-type reg --fault-location pc --bit-index 60 --observe-time 10s --snapshot-tag foo --serial-socket /tmp/qemu-serial-register_pc.sock
+        
+        - snapinject --total-fault-number 1 --min-interval 0 --max-interval 0 --fault-type reg --fault-location pc --bit-index 61 --observe-time 10s --snapshot-tag foo --serial-socket /tmp/qemu-serial-register_pc.sock
+        
+        - snapinject --total-fault-number 1 --min-interval 0 --max-interval 0 --fault-type reg --fault-location pc --bit-index 62 --observe-time 10s --snapshot-tag foo --serial-socket /tmp/qemu-serial-register_pc.sock
+        
+        - snapinject --total-fault-number 1 --min-interval 0 --max-interval 0 --fault-type reg --fault-location pc --bit-index 63 --observe-time 10s --snapshot-tag foo --serial-socket /tmp/qemu-serial-register_pc.sock
+        
+        stdout: /tmp/inject_register_pc.out
+        stderr: /tmp/inject_register_pc.err
+        qmp_socket: /tmp/qmp-register_pc.sock
+        ssh_port: 2315
+        ssh_host: localhost
+        inject_after_boot: true
+        serial_socket: /tmp/qemu-serial-register_pc.sock
+- test:
+    timeout:
+      minutes: 2
+    definitions:
+    - repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: apache-server
+          description: "server installation"
+          os:
+          - debian
+          scope:
+          - functional
+        run:
+          steps:
+          - echo "hello"
+          - sleep 90
+      from: inline
+      name: apache-server
+      path: inline/apache-server.yaml
+context:
+  arch: aarch64
+  cpu: cortex-a57
+  extra_options:
+  - -smp 1
+  - -append "console=ttyAMA0 root=/dev/vda1 rw"
+  - -qmp unix:/tmp/qmp-register_pc.sock,server=on,wait=off
+  - -chardev socket,path=/tmp/gdb-server-register_pc.sock,server=on,wait=off,id=gdb0
+  - -gdb chardev:gdb0
+  - -device pvpanic-pci
+  - -action shutdown=pause,panic=none
+  guestfs_interface: virtio
+  machine: virt
+  memory: 4G
+  netdevice: user,hostfwd=::2315-:22
+device_type: qemu
+job_name: "故障注入pc寄存器"
+priority: medium
+timeouts:
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+  job:
+    minutes: 15
+visibility: public

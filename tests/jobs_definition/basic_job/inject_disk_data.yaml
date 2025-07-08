@@ -1,0 +1,84 @@
+actions:
+- deploy:
+    images:
+      kernel:
+        image_arg: -kernel {kernel}
+        url: file://{{kernel}}
+      rootfs:
+        image_arg: -drive file={rootfs},format=qcow2,index=0,media=disk
+        url: file:///root/lava-qemu-flip/ubuntu-mini.qcow2
+    timeout:
+      minutes: 5
+    to: tmpfs
+- boot:
+    auto_login:
+      login_prompt: 'rros login:'
+      password: root
+      password_prompt: 'Password:'
+      username: root
+    media: tmpfs
+    method: qemu
+    prompts:
+    - 'root@rros:'
+    timeout:
+      minutes: 5
+    fault_inject_params:
+        commands: 
+        - sshcommand xxd -s 10 -l 10 /root/expenses.json
+        - sshcommand printf "\001" | dd bs=1 count=1 of=/root/expenses.json conv=notrunc seek=10
+        - sshcommand xxd -s 10 -l 10 /root/expenses.json
+        stdout: /tmp/disk_fault_data.out
+        stderr: /tmp/disk_fault_data.err
+        qmp_socket: /tmp/qmp-disk_data.sock
+        ssh_port: 2014
+        ssh_host: localhost
+        inject_after_boot: true
+- test:
+    timeout:
+      minutes: 5
+    definitions:
+    - repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: apache-server
+          description: "server installation"
+          os:
+          - debian
+          scope:
+          - functional
+        run:
+          steps:
+          - echo "hello"
+          - cd /root/ && python3 example.py
+          - sleep 90
+      # remember to use -y to allow apt to proceed without interaction
+      # -q simplifies the apt output for logging.
+      from: inline
+      name: apache-server
+      path: inline/apache-server.yaml
+context:
+  arch: aarch64
+  cpu: cortex-a57
+  extra_options:
+  - -smp 1
+  - -append "console=ttyAMA0 root=/dev/vda1 rw"
+  - -qmp unix:/tmp/qmp-disk_data.sock,server=on,wait=off
+  - -chardev socket,path=/tmp/gdb-server-disk_data.sock,server=on,wait=off,id=gdb0
+  - -gdb chardev:gdb0
+  - -device pvpanic-pci
+  - -action shutdown=pause,panic=none
+  guestfs_interface: virtio
+  machine: virt
+  memory: 4G
+  netdevice: user,hostfwd=::20disk_data-:22
+device_type: qemu
+job_name: "注入业务数据"
+priority: medium
+timeouts:
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+  job:
+    minutes: 15
+visibility: public
