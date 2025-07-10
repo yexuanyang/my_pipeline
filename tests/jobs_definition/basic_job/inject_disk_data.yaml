@@ -70,7 +70,7 @@ context:
   guestfs_interface: virtio
   machine: virt
   memory: 4G
-  netdevice: user,hostfwd=::20disk_data-:22
+  netdevice: user,hostfwd=::2014-:22
 device_type: qemu
 job_name: "注入业务数据"
 priority: medium
